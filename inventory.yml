@@ -12,5 +12,5 @@ all:
 
   vars:
     ansible_user: yahia
-    ansible_password: "1234"
+    ansible_password: "hello123"
     ansible_connection: network_cli
