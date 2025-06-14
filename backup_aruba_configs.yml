@@ -1,0 +1,31 @@
+---
+- name: Backup configs from Aruba AOS-S switches
+  hosts: aos_s
+  gather_facts: no
+  tasks:
+    - name: Run "show running-config" on AOS-S
+      ansible.netcommon.cli_command:
+        command: show running-config
+      register: result
+
+    - name: Save AOS-S config to file
+      copy:
+        content: "{{ result.stdout }}"
+        dest: "backups/{{ inventory_hostname }}.txt"
+
+
+- name: Backup configs from Aruba AOS-CX switches
+  hosts: aos_cx
+  gather_facts: no
+  vars:
+    ansible_network_os: arubanetworks.aoscx.aoscx
+  tasks:
+    - name: Get running config from AOS-CX
+      arubanetworks.aoscx.aoscx_command:
+        commands: show running-config
+      register: result
+
+    - name: Save AOS-CX config to file
+      copy:
+        content: "{{ result.stdout[0] }}"
+        dest: "backups/{{ inventory_hostname }}.txt"
